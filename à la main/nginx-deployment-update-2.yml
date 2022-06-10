@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  annotations:
+    kubernetes.io/change-cause: Version 1.14
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 3 # ATTENTION : si on ne le précise pas il passe à 1 : Samuel a fourni un YAML minimal
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.14
+          # ATTENTION : si on ne précise pas les ports, ils sont supprimés
+          ports:
+            - name: deploy-port
+              containerPort: 80
+# Pour l'appliquer : kubectl apply -f nginx-deployment-update-2.yml

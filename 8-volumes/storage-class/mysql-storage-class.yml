@@ -3,38 +3,40 @@ kind: Secret
 metadata:
   name: mysql-db
   labels:
-    app: mysql  
+    app: mysql    
 type: Opaque
 data:
   # valeur: secret
   password: c2VjcmV0
 ---
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: standard
-provisioner: microk8s.io/hostpath
-parameters:
-  type: gp2
-reclaimPolicy: Retain
-allowVolumeExpansion: true
-mountOptions:
-  - debug
-volumeBindingMode: Immediate
+#apiVersion: v1
+#kind: PersistentVolume
+#metadata:
+#  name: "pv-local"
+#  labels:
+#    app: mysql
+#spec:
+#  storageClassName: manual
+#  capacity:
+#    storage: "5Gi"
+#  accessModes:
+#    - "ReadWriteOnce"
+#  hostPath:
+#    path: /data/local
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-local
+  name: pvc-local
   labels:
     app: mysql
 spec:
+  storageClassName: manual
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 5Gi
-  storageClassName: standard
 ---
 apiVersion: apps/v1 
 kind: Deployment
@@ -71,18 +73,18 @@ spec:
       volumes:
       - name: mysql-volume
         persistentVolumeClaim:
-          claimName: mysql-local
+          claimName: pvc-local
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: mysql-service
   labels:
-    app: mysql  
+    app: mysql    
 spec:
   ports:
-  - port: 31306
-    nodePort: 31306
+  - port: 31400
+    nodePort: 31400
     targetPort: mysql-port
     protocol: TCP
   selector:

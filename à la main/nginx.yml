@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: basic-nginx
+  labels:
+    app: nginx
+spec:
+  containers:
+    # Pour se connecter dans le conteneur : kubectl exec -it basic-nginx -- bash
+    # Pour copier un fichier du conteneur vers la machine hôte : kubectl cp basic-nginx:/etc/nginx/nginx.conf cp-example
+    - name: nginx-demo
+      image: nginx
+      ports:
+        - name: nginx-port
+          containerPort: 80 # TODO Comment mettre plusieurs images sur le même port ?
+# Pour appliquer : kubectl apply  -f nginx.yml
+# Pour supprimer : kubectl delete -f nginx.yml
+# Pour supprimer : kubectl delete pod nginx

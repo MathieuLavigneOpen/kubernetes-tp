@@ -1,0 +1,24 @@
+# Pour appliquer : kubectl apply -f webservice.yml
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: webservice
+  labels:
+    app: webservice
+spec:
+  # Pour scaler : kubectl scale --replicas=6 rc webservice
+  replicas: 3
+  selector:
+    app: webservice
+  template:
+    metadata:
+      labels:
+        app: webservice
+    spec:
+      containers:
+        - name: nginx
+          image: emilevauge/whoami
+          ports:
+            - name: http-port
+              containerPort: 80
+# Pour tester qu'on tomber sur chaque pod : watch curl http://k8s05.evoliatis.fr:31001

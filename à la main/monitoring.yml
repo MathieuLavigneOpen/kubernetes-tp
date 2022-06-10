@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: monitoring
+  labels:
+    app: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: monitoring
+  template:
+    metadata:
+      labels:
+        app: monitoring
+    spec:
+      containers:
+        - name: monitoring
+          image: nginx:1.12
+# Pour l'appliquer : kubectl apply -f monitoring.yml
+
